@@ -25,26 +25,33 @@ from reportlab.lib.pagesizes import letter
 import os
 
 # ── Fonts ─────────────────────────────────────────────────────────────────────
-# Uses Liberation Serif (open-source Times New Roman equivalent).
-# To use Garamond instead, replace these paths with your Garamond .ttf files
-# and change FONT_NAME to "Garamond".
-FONT_PATHS = {
-    "Serif":        "/usr/share/fonts/truetype/liberation/LiberationSerif-Regular.ttf",
-    "Serif-Bold":   "/usr/share/fonts/truetype/liberation/LiberationSerif-Bold.ttf",
-    "Serif-Italic": "/usr/share/fonts/truetype/liberation/LiberationSerif-Italic.ttf",
+# Uses Times New Roman on macOS/Windows, or Liberation Serif (its open-source
+# metric-compatible equivalent) on Linux. The first path that exists is used.
+# To use Garamond instead, put your Garamond .ttf paths first in each list.
+FONT_CANDIDATES = {
+    "Serif": [
+        "/System/Library/Fonts/Supplemental/Times New Roman.ttf",          # macOS
+        "C:/Windows/Fonts/times.ttf",                                      # Windows
+        "/usr/share/fonts/truetype/liberation/LiberationSerif-Regular.ttf",  # Linux
+    ],
+    "Serif-Bold": [
+        "/System/Library/Fonts/Supplemental/Times New Roman Bold.ttf",
+        "C:/Windows/Fonts/timesbd.ttf",
+        "/usr/share/fonts/truetype/liberation/LiberationSerif-Bold.ttf",
+    ],
+    "Serif-Italic": [
+        "/System/Library/Fonts/Supplemental/Times New Roman Italic.ttf",
+        "C:/Windows/Fonts/timesi.ttf",
+        "/usr/share/fonts/truetype/liberation/LiberationSerif-Italic.ttf",
+    ],
 }
 
-# On macOS, fonts are typically at:
-#   /Library/Fonts/  or  /System/Library/Fonts/
-# On Windows:
-#   C:/Windows/Fonts/
-# Update the paths above if running on a different OS.
-
-for name, path in FONT_PATHS.items():
-    if not os.path.exists(path):
+for name, paths in FONT_CANDIDATES.items():
+    path = next((p for p in paths if os.path.exists(p)), None)
+    if path is None:
         raise FileNotFoundError(
-            f"Font not found: {path}\n"
-            "Update FONT_PATHS in this script to point to your font files."
+            f"No font found for {name}. Tried:\n  " + "\n  ".join(paths) +
+            "\nAdd a valid .ttf path to FONT_CANDIDATES in this script."
         )
     pdfmetrics.registerFont(TTFont(name, path))
 

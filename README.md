@@ -53,7 +53,7 @@ Cards have 0.25" inner padding, so cuts can be 1–2 mm off without affecting th
 All content is in `make_cards.py`. The most common changes:
 
 - **Checkbox options:** Edit the lists passed to `cbline()` in `draw_front()` and `draw_back()`
-- **Font:** Change `FONT_PATHS` to point to Garamond `.ttf` files and update the font name strings throughout
+- **Font:** Add your Garamond `.ttf` paths to the front of each list in `FONT_CANDIDATES`
 - **Spacing / font sizes:** Adjust `gap=` and `fs=` arguments on each element
 - **Church info:** Edit the strings in the header block of `draw_front()`
 
@@ -67,6 +67,6 @@ All content is in `make_cards.py`. The most common changes:
 
 ## Notes
 
-- The PDF uses Liberation Serif (open-source Times New Roman equivalent). To use Garamond, install the font and update `FONT_PATHS`.
+- The PDF uses Times New Roman on macOS and Windows, and Liberation Serif (its open-source equivalent) on Linux. The script finds the font automatically. To use Garamond, install the font and add it to `FONT_CANDIDATES`.
 - Word and Google Docs versions of the card exist for content review only — always print from the PDF.
 - See the *Connect Card — Printing & File Reference* doc in the SPBTL shared Google Drive for full printing and editing instructions.
